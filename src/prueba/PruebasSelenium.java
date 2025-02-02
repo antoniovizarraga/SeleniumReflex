@@ -24,7 +24,7 @@ class PruebasSelenium {
 
 	@Test
 	void test1() {
-		driver1.get("https://elenarivero.github.io/examen/index.html");
+		driver1.get("http://localhost:3000");
 		WebElement usuarioBox = driver1.findElement(By.id("usuario"));        
         WebElement passwordBox = driver1.findElement(By.id("password"));
         
