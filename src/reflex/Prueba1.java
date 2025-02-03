@@ -61,7 +61,12 @@ public class Prueba1 {
 
 		// Resultado esperado: http://localhost:3000/redes_sociales
 		String textoRedes = enlaceRedes.getAttribute("href");
-		assertEquals("http://localhost:3000/redes_sociales/", textoRedes);
+		
+		/* He tenido que poner como URL: "/redessociales" porque en Reflex
+		 * al llamar la página: "/redes_sociales" me salta un error 404 al
+		 * intentar acceder a la página. Tampoco admite guiones, por lo
+		 * que tuve que ponerlo todo junto. */
+		assertEquals("http://localhost:3000/redessociales/", textoRedes);
 
 		enlaceRedes.click();
 	}
