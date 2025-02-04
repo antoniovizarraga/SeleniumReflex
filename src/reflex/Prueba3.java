@@ -31,11 +31,8 @@ public class Prueba3 {
 
 	@Test
 	void testRedesCabecera() {
-		/* He tenido que poner como URL: "/redessociales" porque en Reflex
-		 * al llamar la página: "/redes_sociales" me salta un error 404 al
-		 * intentar acceder a la página. Tampoco admite guiones, por lo
-		 * que tuve que ponerlo todo junto. */
-		driver1.get("http://localhost:3000/redessociales");
+
+		driver1.get("http://localhost:3000/redes_sociales");
 		WebElement cabecera = driver1.findElement(By.id("cabecera"));
 
 		// Resultado esperado: Redes sociales
@@ -46,7 +43,7 @@ public class Prueba3 {
 
 	@Test
 	void testRedesInstagram() {
-		driver1.get("http://localhost:3000/redessociales");
+		driver1.get("http://localhost:3000/redes_sociales");
 		WebElement enlaceInstagram = driver1.findElement(By.id("instagram"));
 
 		// Resultado esperado: https://www.instagram.com/
@@ -58,7 +55,7 @@ public class Prueba3 {
 
 	@Test
 	void testRedesTiktok() {
-		driver1.get("http://localhost:3000/redessociales");
+		driver1.get("http://localhost:3000/redes_sociales");
 		WebElement enlaceTiktok = driver1.findElement(By.id("tiktok"));
 
 		// Resultado esperado: https://www.tiktok.com/
@@ -70,7 +67,7 @@ public class Prueba3 {
 
 	@Test
 	void testRedesFacebook() {
-		driver1.get("http://localhost:3000/redessociales");
+		driver1.get("http://localhost:3000/redes_sociales");
 		WebElement enlaceFacebook = driver1.findElement(By.id("facebook"));
 
 		// Resultado esperado: https://www.facebook.com/
@@ -82,7 +79,7 @@ public class Prueba3 {
 
 	@Test
 	void testRedesAtras() {
-		driver1.get("http://localhost:3000/redessociales");
+		driver1.get("http://localhost:3000/redes_sociales");
 		WebElement volver = driver1.findElement(By.id("volver"));
 		
 		String direccionAtras = volver.getAttribute("href");
