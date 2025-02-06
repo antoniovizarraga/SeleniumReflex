@@ -19,7 +19,7 @@ public class Prueba1 {
 		// que es algo de la versión que tiene
 		// Selenium guardada que no es compatible con esta versión de Selenium o algo
 		// así.
-		driver1 = new FirefoxDriver();
+		driver1 = new ChromeDriver();
 	}
 
 	/*
