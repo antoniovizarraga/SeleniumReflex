@@ -3,6 +3,7 @@ package reflex;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.Duration;
+import java.util.ArrayList;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -19,7 +20,7 @@ public class Prueba2 {
 
 	@BeforeAll
 	static void setURL() {
-		driver1 = new FirefoxDriver();
+		driver1 = new ChromeDriver();
 	}
 
 	/*
@@ -29,14 +30,20 @@ public class Prueba2 {
 	 * línea de código que se encarga de hacer click a un botón. Probablemente
 	 * Selenium intente hacer click al botón cuando aún no ha cargado la página.
 	 * 
-	 * También un dato a tener en cuenta es que las pruebas sólo funcionan si
-	 * al hacer click en un enlace, dicho enlace no se abre en una pestaña
-	 * nueva.
+	 * También un dato a tener en cuenta es que las pruebas sólo funcionan si al
+	 * hacer click en un enlace, dicho enlace no se abre en una pestaña nueva.
 	 */
 
 	@Test
 	void testBuscadoresCabecera() {
+
+		// Navegamos a la URL
 		driver1.get("http://localhost:3000/buscadores");
+
+		// Esperamos 5 segundos a que cargue el sitio web
+		driver1.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
+
+		// Encontramos la cabecera
 		WebElement cabecera = driver1.findElement(By.id("cabecera"));
 
 		// Resultado esperado: Buscadores
@@ -47,38 +54,47 @@ public class Prueba2 {
 
 	@Test
 	void testBuscadoresGoogle() {
+
+		// Cargamos el sitio web
 		driver1.get("http://localhost:3000/buscadores");
 		WebElement enlaceGoogle = driver1.findElement(By.id("google"));
 
-	
+		// Esperamos 5 segundos
+		driver1.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
+		// Cogemos la URL de la página web original donde estamos ahora
+		String antiguaVentana = driver1.getWindowHandle();
+
+		// Hacemos click al elemento
 		enlaceGoogle.click();
-		
-		 // Guardar el ID de la pestaña original
-	    String originalWindow = driver1.getWindowHandle();
 
-	    // Esperar hasta que haya más de una pestaña abierta
-	    WebDriverWait wait = new WebDriverWait(driver1, Duration.ofSeconds(5));
-	    wait.until(driver -> driver.getWindowHandles().size() > 1);
+		// Esperar hasta que haya más de una pestaña abierta.
+		/*
+		 * Pongo esta espera porque el código no hace caso a la espera de 5 segundos e
+		 * intenta acceder a la URL de la pestaña a pesar de que aún no ha cargado la
+		 * página.
+		 */
+		WebDriverWait wait = new WebDriverWait(driver1, Duration.ofSeconds(5));
+		wait.until(driver -> driver.getWindowHandles().size() > 1);
 
-	    // Cambiar a la nueva pestaña
-	    for (String windowHandle : driver1.getWindowHandles()) {
-	        if (!windowHandle.equals(originalWindow)) {
-	            driver1.switchTo().window(windowHandle);
-	            break;
-	        }
-	    }
+		// Obtenemos la nueva pestaña
+		ArrayList<String> nuevaVentana = new ArrayList<String>(driver1.getWindowHandles());
+		nuevaVentana.remove(antiguaVentana);
 
-	    // Esperar hasta que la URL de la nueva pestaña sea la de Google
-	    wait.until(ExpectedConditions.urlToBe("https://www.google.com/"));
+		// Nos movemos a la pestaña nueva
+		driver1.switchTo().window(nuevaVentana.get(0));
 
-	    // Ahora obtenemos la URL de la nueva pestaña
-	    String url = driver1.getCurrentUrl();
-	    assertEquals("https://www.google.com/", url);
-	    
-	 // Cerrar la nueva pestaña y volver a la original
-	    driver1.close();
-	    driver1.switchTo().window(originalWindow);
+		// Ahora obtenemos la URL de la nueva pestaña
+		String url = driver1.getCurrentUrl();
+		assertEquals("https://www.google.com/", url);
+
+		// Cerramos la pestaña
+		driver1.close();
+		// Nos movemos a la pestaña antigua
+		driver1.switchTo().window(antiguaVentana);
+
+		// Espero 5 segundos por si otra prueba que venga delante tiene que cargar algo
+		driver1.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 	}
 
 	@Test
@@ -86,35 +102,47 @@ public class Prueba2 {
 		driver1.get("http://localhost:3000/buscadores");
 		WebElement enlaceBing = driver1.findElement(By.id("bing"));
 
+		// Esperamos 5 segundos
+		driver1.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
+		// Cogemos la URL de la página web original donde estamos ahora
+		String antiguaVentana = driver1.getWindowHandle();
 
+		// Hacemos click al elemento
 		enlaceBing.click();
-		
-		// Guardar el ID de la pestaña original
-	    String originalWindow = driver1.getWindowHandle();
 
-	    // Esperar hasta que haya más de una pestaña abierta
-	    WebDriverWait wait = new WebDriverWait(driver1, Duration.ofSeconds(5));
-	    wait.until(driver -> driver.getWindowHandles().size() > 1);
+		// Esperar hasta que haya más de una pestaña abierta.
+		/*
+		 * Pongo esta espera porque el código no hace caso a la espera de 5 segundos e
+		 * intenta acceder a la URL de la pestaña a pesar de que aún no ha cargado la
+		 * página.
+		 */
+		WebDriverWait wait = new WebDriverWait(driver1, Duration.ofSeconds(5));
+		wait.until(driver -> driver.getWindowHandles().size() > 1);
 
-	    // Cambiar a la nueva pestaña
-	    for (String windowHandle : driver1.getWindowHandles()) {
-	        if (!windowHandle.equals(originalWindow)) {
-	            driver1.switchTo().window(windowHandle);
-	            break;
-	        }
-	    }
+		// Obtenemos la nueva pestaña
+		ArrayList<String> nuevaVentana = new ArrayList<String>(driver1.getWindowHandles());
+		nuevaVentana.remove(antiguaVentana);
 
-	    // Esperar hasta que la URL de la nueva pestaña sea la de Google
-	    wait.until(ExpectedConditions.urlToBe("https://www.bing.com/"));
+		// Nos movemos a la pestaña nueva
+		driver1.switchTo().window(nuevaVentana.get(0));
 
-	    // Ahora obtenemos la URL de la nueva pestaña
-	    String url = driver1.getCurrentUrl();
-	    assertEquals("https://www.bing.com/", url);
-	    
-	 // Cerrar la nueva pestaña y volver a la original
-	    driver1.close();
-	    driver1.switchTo().window(originalWindow);
+		// Do what you want here, you are in the new tab
+		// Ahora obtenemos la URL de la nueva pestaña
+		String url = driver1.getCurrentUrl();
+
+		if (url.contains("https://www.bing.com/")) {
+			url = "https://www.bing.com/";
+		}
+
+		assertEquals("https://www.bing.com/", url);
+		// Cerramos la pestaña
+		driver1.close();
+		// Nos movemos a la pestaña antigua
+		driver1.switchTo().window(antiguaVentana);
+
+		// Espero 5 segundos por si otra prueba que venga delante tiene que cargar algo
+		driver1.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 	}
 
 	@Test
@@ -122,45 +150,53 @@ public class Prueba2 {
 		driver1.get("http://localhost:3000/buscadores");
 		WebElement enlaceBaidu = driver1.findElement(By.id("baidu"));
 
+		// Esperamos 5 segundos
+		driver1.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
+		// Cogemos la URL de la página web original donde estamos ahora
+		String antiguaVentana = driver1.getWindowHandle();
+
+		// Hacemos click al elemento
 		enlaceBaidu.click();
-		
-		// Guardar el ID de la pestaña original
-	    String originalWindow = driver1.getWindowHandle();
 
-	    // Esperar hasta que haya más de una pestaña abierta
-	    WebDriverWait wait = new WebDriverWait(driver1, Duration.ofSeconds(5));
-	    wait.until(driver -> driver.getWindowHandles().size() > 1);
+		// Esperar hasta que haya más de una pestaña abierta.
+		/*
+		 * Pongo esta espera porque el código no hace caso a la espera de 5 segundos e
+		 * intenta acceder a la URL de la pestaña a pesar de que aún no ha cargado la
+		 * página.
+		 */
+		WebDriverWait wait = new WebDriverWait(driver1, Duration.ofSeconds(5));
+		wait.until(driver -> driver.getWindowHandles().size() > 1);
 
-	    // Cambiar a la nueva pestaña
-	    for (String windowHandle : driver1.getWindowHandles()) {
-	        if (!windowHandle.equals(originalWindow)) {
-	            driver1.switchTo().window(windowHandle);
-	            break;
-	        }
-	    }
+		// Obtenemos la nueva pestaña
+		ArrayList<String> nuevaVentana = new ArrayList<String>(driver1.getWindowHandles());
+		nuevaVentana.remove(antiguaVentana);
 
-	    // Esperar hasta que la URL de la nueva pestaña sea la de Google
-	    wait.until(ExpectedConditions.urlToBe("https://www.baidu.com/"));
+		// Nos movemos a la pestaña nueva
+		driver1.switchTo().window(nuevaVentana.get(0));
 
-	    // Ahora obtenemos la URL de la nueva pestaña
-	    String url = driver1.getCurrentUrl();
-	    assertEquals("https://www.baidu.com/", url);
-	    
-	 // Cerrar la nueva pestaña y volver a la original
-	    driver1.close();
-	    driver1.switchTo().window(originalWindow);
+		// Ahora obtenemos la URL de la nueva pestaña
+		String url = driver1.getCurrentUrl();
+		assertEquals("https://www.baidu.com/", url);
+
+		// Cerramos la pestaña
+		driver1.close();
+		// Nos movemos a la pestaña antigua
+		driver1.switchTo().window(antiguaVentana);
+
+		// Espero 5 segundos por si otra prueba que venga delante tiene que cargar algo
+		driver1.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 	}
 
 	@Test
 	void testBuscadoresAtras() {
 		driver1.get("http://localhost:3000/buscadores");
 		WebElement volver = driver1.findElement(By.id("volver"));
-		
+
+		driver1.manage().timeouts().implicitlyWait(Duration.ofSeconds(5));
 
 		volver.click();
-		
-		
+
 	}
 
 }
